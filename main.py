@@ -56,7 +56,6 @@ def calc_moving_average(mr_data):
 
 def main():
   parser = argparse.ArgumentParser()
-  parser.add_argument('--input', '-i', default='samples/Please_Open_The_Door_Loud.wav', help='Input audio file name')
   calc_moving_average([MovingAverageData(7), MovingAverageData(14)])
 
 if __name__ == "__main__":
