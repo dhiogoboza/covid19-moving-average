@@ -13,7 +13,7 @@ POSITIVE_CASES_ONLINE = 'casos_positivos'
 COLORS = ['red', 'blue', 'purple', 'orange', 'yellow', 'cyan']
 X_MAX_LOC = 8
 
-CHART_TITLE = 'Casos Confirmados de COVID-19'
+CHART_TITLE = 'Casos confirmados de covid-19 RN - Brasil'
 Y_AXIS_LABEL = 'Casos diários'
 X_AXIS_LABEL = ''
 MOVING_AVERAGE_LABEL = 'Média Móvel - {} dias'
@@ -21,7 +21,7 @@ MOVING_AVERAGE_LABEL = 'Média Móvel - {} dias'
 class MovingAverageData:
   def __init__(self, size):
     self.size = size
-    self.data = pandas.Series()
+    self.data = pandas.Series(dtype='float64')
     self.values = []
 
   def __current_mean(self):
@@ -40,17 +40,8 @@ class MovingAverageData:
   def get_label(self):
     return MOVING_AVERAGE_LABEL.format(self.size)
 
-def calc_moving_average(fetch_data, ma_data):
-  if fetch_data:
-    # read csv online data
-    df = pandas.read_csv('https://covid.lais.ufrn.br/dados_abertos/evolucao_casos.csv', sep=';')
-
-    # transform date columns in pandas datetime
-    df[NOTIFICATION_DATE_COLUMN_ONLINE] = pandas.to_datetime(df[NOTIFICATION_DATE_COLUMN_ONLINE], format='%Y-%m-%d')
-
-    # create notifications serie
-    notifications = pandas.Series(df[POSITIVE_CASES_ONLINE].values, index =(df[NOTIFICATION_DATE_COLUMN_ONLINE].values))
-  else:
+def calc_moving_average(local_data, ma_data):
+  if local_data:
     # read csv file
     df = pandas.read_csv('data/covid_dataset.csv')
 
@@ -62,6 +53,15 @@ def calc_moving_average(fetch_data, ma_data):
 
     # group notifications by date and sort
     notifications = df[NOTIFICATION_DATE_COLUMN].value_counts().sort_index(0)
+  else:
+    # read csv online data
+    df = pandas.read_csv('https://covid.lais.ufrn.br/dados_abertos/evolucao_casos.csv', sep=';')
+
+    # transform date columns in pandas datetime
+    df[NOTIFICATION_DATE_COLUMN_ONLINE] = pandas.to_datetime(df[NOTIFICATION_DATE_COLUMN_ONLINE], format='%Y-%m-%d')
+
+    # create notifications serie
+    notifications = pandas.Series(df[POSITIVE_CASES_ONLINE].values, index =(df[NOTIFICATION_DATE_COLUMN_ONLINE].values))
 
   # max notifications to setup graphs max value
   max_not = 0
@@ -72,7 +72,7 @@ def calc_moving_average(fetch_data, ma_data):
       data.add(index, value)
     if value > max_not:
       max_not = value
-   
+
   # add a 10% padding   
   max_not *= 1.1
 
@@ -102,7 +102,7 @@ def calc_moving_average(fetch_data, ma_data):
   ax1.tick_params(axis='y')
   ax1.set(ylim=(0, max_not))
   ax1.twinx()
-  
+
   for i, data in enumerate(ma_data):
     color = 'tab:' + COLORS[i % len(COLORS)]
 
@@ -123,14 +123,15 @@ def str2bool(v):
 def main():
   parser = argparse.ArgumentParser()
   parser.add_argument('--moving_average', '-ma', nargs='+', help='Moving averages in days')
-  parser.add_argument('--fetch_data', '-f', type=str2bool, default=False, help='Use updated data')
+  parser.add_argument('--local_data', '-l', type=str2bool, default=False, help='Use local data instead of fetch data online')
+  parser.add_argument('-f', help='Unused') # workaround to run this code in codelab
   args = vars(parser.parse_args())
 
   if args['moving_average'] is None:
     args['moving_average'] = ['7', '14']
 
   moving_avgs = [MovingAverageData(int(x)) for x in args['moving_average']]
-  calc_moving_average(args['fetch_data'], moving_avgs)
+  calc_moving_average(args['local_data'], moving_avgs)
 
 if __name__ == '__main__':
   main()

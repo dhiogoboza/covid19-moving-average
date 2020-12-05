@@ -1,6 +1,6 @@
-# COVID19 Cases Moving Average
+# Moving average in cases of covid-19
 
-Moving average graph with covid19 data in state of Rio Grande do Norte - Brazil.
+Moving average graph with covid-19 data in state of Rio Grande do Norte - Brazil.
 
 ## Requirements
 
@@ -22,7 +22,7 @@ python main.py [OPTIONS]
 Option | Type | Default | Description
 ------ | ---- | ------- | -------
 -ma | list | 7 14 | Moving averages in days
--f | bool | false | Use updated data
+-l | bool | false | Use local data instead of fetch data online
 
 ## Results
 
