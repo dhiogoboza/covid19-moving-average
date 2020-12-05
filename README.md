@@ -17,3 +17,18 @@ pipenv install
 python main.py [OPTIONS]
 ```
 
+## Options
+
+Option | Type | Default | Description
+------ | ---- | ------- | -------
+-ma | list | 7 14 | Moving averages in days
+-f | bool | false | Use updated data
+
+## Results
+
+### Fetching Data
+![Fetching Data](screenshots/fetch_data.png?raw=true "Fetching Data")
+
+### Local Data
+![Local Data](screenshots/local_data.png "Local Data")
+
