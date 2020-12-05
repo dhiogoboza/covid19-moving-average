@@ -90,7 +90,7 @@ def calc_moving_average(local_data, ma_data):
   df = pandas.DataFrame(df_data)
 
   # create chart
-  fig, ax1 = plt.subplots(figsize=(15,10))
+  fig, ax1 = plt.subplots(figsize=(10,7))
   ax1.set_title(CHART_TITLE, fontsize=16)
   color = 'tab:green'
 
