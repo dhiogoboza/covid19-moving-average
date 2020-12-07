@@ -124,7 +124,7 @@ def main():
   parser = argparse.ArgumentParser()
   parser.add_argument('--moving_average', '-ma', nargs='+', help='Moving averages in days')
   parser.add_argument('--local_data', '-l', type=str2bool, default=False, help='Use local data instead of fetch data online')
-  parser.add_argument('-f', help='Unused') # workaround to run this code in codelab
+  parser.add_argument('-f', help='Unused') # workaround to run this code in colab
   args = vars(parser.parse_args())
 
   if args['moving_average'] is None:
